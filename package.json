@@ -1,0 +1,25 @@
+{
+  "name": "hapi-jsonapi",
+  "version": "0.0.1",
+  "repository": "git://github.com/fhemberger/hapi-jsonapi",
+  "description": "A helper for implementing a JSON API (http://jsonapi.org/) conform API with hapi",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "hapi",
+    "jsonapi",
+    "api"
+  ],
+  "author": "Frederic Hemberger",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/fhemberger/hapi-jsonapi/raw/master/LICENSE"
+    }
+  ],
+  "dependencies": {
+    "hoek": "^2.12.0"
+  }
+}
