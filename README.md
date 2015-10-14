@@ -1,57 +1,52 @@
 # hapi-jsonapi
 
-Helper for implementing [JSON API](http://jsonapi.org) with [hapi](http://hapijs.com). **This is still work in progress!**
+Helper for implementing [JSON API](http://jsonapi.org) with [hapi](http://hapijs.com).  
+**Important: This is still work in progress!** (Thus, it's not on npm yet.)
 
 
 ## Usage
 
-Register this plugin and a default error handler in your server:
+Register this plugin in your hapi server:
 
 ```js
 var hapiJsonApiOptions = {
     baseUrl: 'http://api.example.com/v1/'
 };
 
-server.register({ register: require('hapi-jsonapi'), options: hapiJsonApiOptions }, function (err) {
+server.register(
+    { register: require('hapi-jsonapi'), options: hapiJsonApiOptions }, function (err) {
 
-    if (err) { throw err; }
-
-    // Error handler
-    server.ext('onPreResponse', function (request, reply) {
-
-        var response = request.response;
-
-        if (!response.isBoom) {
-            return reply.continue();
-        }
-
-        request.server.log(['error'], response);
-        return reply.jsonapi(response);
+        if (err) { throw err; }
+        // Start the server
     });
+```
+
+Then use `reply.jsonapi()` in your route handler, using a JSON API style response, e.g.:
+
+```js
+reply.jsonapi({
+    id: 1,
+    type: 'heartbeat',
+    meta: {
+        status: 'ok',
+    }
 });
 ```
 
-Then use `reply.jsonapi()` in your route handler. Wrap error messages either using [Boom](https://github.com/hapijs/boom) or a regular JS `Error` object:
+A `self` reference is always added inside a top-level `links` key. The response will be validated wit `Joi`, logging any issues. However, _at the moment_, the response will be sent regardless of the validation result.
+
+Errors can be passed into responses directly and will be automatically converted to the proper JSON API structure:
 
 ```js
 reply.jsonapi( Boom.notFound() );
 reply.jsonapi( new Error('Something went wrong') );
 ```
 
-A `self` reference is always added inside a top-level `links` key, additional links can be added by passing a second parameter:
 
-```js
-var links = {
-    next: "http://example.com/posts?page[offset]=2",
-    last: "http://example.com/posts?page[offset]=10"
-};
-reply.jsonapi( data, links );
-```
 
 
 ## TODO:
-- Check if id/type is set in data part of response
-- Add Joi validation for API response structure
+
 - Suppport [compound documents](http://jsonapi.org/format/#document-structure-compound-documents)
 - Write tests
 - …
